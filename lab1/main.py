@@ -1,89 +1,178 @@
-from typing import List
-import math as m
-from interval import *
+import intvalpy as ip
+import numpy as np
+import matplotlib.pyplot as plt
+from copy import deepcopy
+# Task 1
+
+def calculateDet(delta):
+        midA = [[1.05, 1],
+                [0.95, 1]]
+        radA = [[delta, delta], [delta, delta]]
+        A = ip.Interval(midA, radA, midRadQ=True)
+        detA = A[0][0] * A[1][1] - A[1][0] * A[0][1]
+        return detA
+
+# Find delta that 0 is in det(A)
+def task1():
+    deltaArray = np.linspace(0, 1, num=10)
+    detArrayHight = []
+    detArrayLow = []
+    for i in range(len(deltaArray)):
+        delta = deltaArray[i]
+        detA = calculateDet(delta)
+        detArrayHight.append(detA.b)
+        detArrayLow.append(detA.a)
+    
+    plt.figure()
+    plt.title("Task 1")
+    plt.grid()
+    plt.plot(deltaArray, detArrayHight, label = "det up border")
+    plt.plot(deltaArray, detArrayLow, label = "det down border")
+    plt.plot(0.025, calculateDet(0.025).a, 'b*', label = "delta = 0.025")
+    plt.xlabel('delta')
+    plt.ylabel('det(A)')
+    plt.legend()
+    plt.show()
 
 
-def det(A:IntMatrix):
-    return A[0][0] * A[1][1] - A[0][1] * A[1][0]
+def det2(A):
+    return A[0][0] * A[1][1] - A[1][0] * A[0][1]
+
+def bauman(vertices):
+    for i in range(len(vertices)):
+        for j in range(i + 1):
+            if det2(vertices[i]) * det2(vertices[j]) <= 0:
+                return False
+    return True
+
+def task2():
+    A = np.array([[1.05, 0.95], [ 1.0, 1.0]])
+    
+    deltas = np.linspace(0.04, 0.06, 10)
+    # Регрессия
+    print("\nЗадача регрессии")
+    for delta in deltas:
+        A1 = A.copy()
+        A1[0][0] -= delta
+        A1[1][0] -= delta
+        A2 = A.copy()
+        A2[0][0] += delta
+        A2[1][0] -= delta
+        A3 = A.copy()
+        A3[0][0] += delta
+        A3[1][0] += delta
+        A4 = A.copy()
+        A4[0][0] -= delta
+        A4[1][0] += delta
+
+        verticesA = [A1, A2, A3, A4]
+        print("{:2.6f}\t{}".format(delta, "неособенная" if bauman(verticesA) else "особенная"))
+
+    # Томография
+    deltas = np.linspace(0.02, 0.029, 10)
+    print("\nЗадача томографии")
+    for delta in deltas:
+        A1 = A.copy()
+        A1[0][0] -= delta
+        A1[0][1] -= delta
+        A1[1][0] -= delta
+        A1[1][1] -= delta
+
+        A2 = A.copy()
+        A2[0][0] += delta
+        A2[0][1] -= delta
+        A2[1][0] -= delta
+        A2[1][1] -= delta
+        A3 = A.copy()
+        A3[0][0] -= delta
+        A3[0][1] += delta
+        A3[1][0] -= delta
+        A3[1][1] -= delta
+        A4 = A.copy()
+        A4[0][0] -= delta
+        A4[0][1] -= delta
+        A4[1][0] += delta
+        A4[1][1] -= delta
+        A5 = A.copy()
+        A5[0][0] -= delta
+        A5[0][1] -= delta
+        A5[1][0] -= delta
+        A5[1][1] += delta
+
+        A6 = A.copy()
+        A6[0][0] += delta
+        A6[0][1] += delta
+        A6[1][0] -= delta
+        A6[1][1] -= delta
+        A7 = A.copy()
+        A7[0][0] -= delta
+        A7[0][1] += delta
+        A7[1][0] += delta
+        A7[1][1] -= delta
+        A8 = A.copy()
+        A8[0][0] -= delta
+        A8[0][1] -= delta
+        A8[1][0] += delta
+        A8[1][1] += delta
+        A9 = A.copy()
+        A9[0][0] += delta
+        A9[0][1] -= delta
+        A9[1][0] -= delta
+        A9[1][1] += delta
+        A10 = A.copy()
+        A10[0][0] += delta
+        A10[0][1] -= delta
+        A10[1][0] += delta
+        A10[1][1] -= delta
+        A11 = A.copy()
+        A11[0][0] -= delta
+        A11[0][1] += delta
+        A11[1][0] -= delta
+        A11[1][1] += delta
 
 
-def min_delta_search(A:Matrix, delta: Number, radCoeffs: Matrix) -> bool:
-    def f(A:Matrix, delta: Number, radCoeffs: Matrix):
-        radA = [[delta * radCoeffs[0][0], delta * radCoeffs[0][1]],
-                [delta * radCoeffs[1][0], delta * radCoeffs[1][1]]]
-        A_int = midrad(A, radA)
-        det_A = det(A_int)
-        if 0.0 in det_A:
-            return True
-        else:
-            return False
-        
-    min_delta = delta
-    a = 0
-    b = delta
-    while not m.isclose(a, b, rel_tol=1e-14):
-        min_delta = (a+b)/2
-        if f(A, min_delta, radCoeffs):
-            b = min_delta
-        else:
-            a = min_delta
-    return (a+b)/2
+        A12 = A.copy()
+        A12[0][0] += delta
+        A12[0][1] += delta
+        A12[1][0] += delta
+        A12[1][1] -= delta
+        A13 = A.copy()
+        A13[0][0] -= delta
+        A13[0][1] += delta
+        A13[1][0] += delta
+        A13[1][1] += delta
+        A14 = A.copy()
+        A14[0][0] += delta
+        A14[0][1] -= delta
+        A14[1][0] += delta
+        A14[1][1] += delta
+        A15 = A.copy()
+        A15[0][0] += delta
+        A15[0][1] += delta
+        A15[1][0] -= delta
+        A15[1][1] += delta
+
+        A16 = A.copy()
+        A16[0][0] += delta
+        A16[0][1] += delta
+        A16[1][0] += delta
+        A16[1][1] += delta
+
+        verticesA = [A1, A2, A3, A4, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16]
+        print("{:2.5f}\t{}".format(delta, "неособенная" if bauman(verticesA) else "особенная"))
+
+
+def task3():
+    midA = [[1.05, 1],
+            [0.95, 1]]
+    U, S, V = np.linalg.svd(midA)
+    print("Сингулярные числа " + str(S))
 
 
 if __name__ == "__main__":
-    print("Enter A_11, A_12, A_21, A_22: ", end='')
-    a, b, c, d = [float(n) for n in input().split()]
-    if (a < 0 or b < 0 or c < 0 or d < 0):
-        raise ValueError("Values must be non-negative.")
-    delta = min(a, b, c, d)
-    print(delta)
-    A_orig = [[a,b],[c,d]]
-
-    ############# rad томографии #############
-    print("\nтомография\n")
-    radCoeffs = [[1, 1],
-                 [1, 1]]
-
-    radA = [[delta * radCoeffs[0][0], delta * radCoeffs[0][1]],
-            [delta * radCoeffs[1][0], delta * radCoeffs[1][1]]]
-
-    print("radA =\n", radA)
-    A = midrad(A_orig, radA)
-    print("A = \n", A)
-    det_A = det(A)
-    
-    print(det_A)
-    if m.isclose(det_A.mid, 0.0):
-        print("delta = 0")
-    elif 0.0 in Interval(det_A.left, det_A.right):
-        min_delta = min_delta_search(A_orig, delta, radCoeffs)
-        print("min delta = ", min_delta)
-        radA = [[min_delta * radCoeffs[0][0], min_delta * radCoeffs[0][1]],
-                [min_delta * radCoeffs[1][0], min_delta * radCoeffs[1][1]]]
-        print(det(midrad(A_orig, radA)))
-
-    ############# rad регрессии #############
-    print("\nрегрессия\n")
-    radCoeffs = [[1, 0],
-                 [1, 0]]
-
-    radA = [[delta * radCoeffs[0][0], delta * radCoeffs[0][1]],
-            [delta * radCoeffs[1][0], delta * radCoeffs[1][1]]]
-
-    print("radA =\n", radA)
-    A = midrad(A_orig, radA)
-    print("A = \n", A)
-    det_A = det(A)
-    
-    print(det_A)
-    if m.isclose(det_A.mid, 0.0):
-        print("delta = 0")
-    elif 0.0 in Interval(det_A.left, det_A.right):
-        min_delta = min_delta_search(A_orig, delta, radCoeffs)
-        print("min delta = ", min_delta)
-        radA = [[min_delta * radCoeffs[0][0], min_delta * radCoeffs[0][1]],
-                [min_delta * radCoeffs[1][0], min_delta * radCoeffs[1][1]]]
-        print(det(midrad(A_orig, radA)))
-
-
-        # 1.05 1 0.95 1
+    print("Task 1:")
+    task1()
+    print("Task 2:")
+    task2()
+    print("Task 3:")
+    task3()
