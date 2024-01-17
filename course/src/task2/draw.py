@@ -8,11 +8,13 @@ def draw_res(ax, x):
     ax.plot([x[1], x[1]], [x[2], x[3]], color="r")
     ax.plot([x[0], x[1]], [x[2], x[2]], color="r")
     ax.plot([x[0], x[1]], [x[3], x[3]], color="r")
+    ax.plot([0, 0], [-0.7, 0.5], color="k", linewidth=1)
+    ax.plot([-1.0, 1.5], [0, 0], color="k", linewidth=1)
 
 def start_tol_plot(A, b, needVe=False):
     fig, ax = plt.subplots(figsize=(9, 5.7))
 
-    x, y = np.mgrid[-1:1:400j, -0.7:0.5:400j]
+    x, y = np.mgrid[-1:1.2:400j, -0.7:0.5:400j]
     z = np.zeros(x.shape)
     for i in range(0, x.shape[0]):
         for j in range(0, x.shape[1]):
@@ -20,11 +22,11 @@ def start_tol_plot(A, b, needVe=False):
             if(f >= 0):
                 z[i][j] = f
     ax.contour(x, y, z, levels = 0, linewidths=1, colors='#178913')
-    x1 = [-0.18, 0.35, 0.18, 0.02]
-    x2 = [0.14, 0.5, -0.5, 0.33]
+    x1 = [-0.255, 0.75, -0.25, 0.085]
+    x2 = [-0.15, 0.8, -0.4, 0.133]
 
-    draw_res(ax, x1)
     draw_res(ax, x2)
+    # draw_res(ax, x2)
 
     return
 
@@ -32,7 +34,7 @@ def start_tol_plot(A, b, needVe=False):
 def plot(A, b, title, needVe=False):
     tol = start_tol_plot(A, b, needVe)
     plt.title(title)
-    plt.xlim(-1, 1.2)
+    plt.xlim(-1, 1.5)
     plt.ylim(-0.7, 0.5)
 
     return tol
@@ -64,10 +66,10 @@ print(np.linalg.cond(midA))
 
 my_A = ip.Interval([
     [[3, 4], [5, 6]],
-    [[-1, 1], [-3, 1]],
+    [[-0.75, 1], [-3, 1]],
 ])
 
-my_b = ip.Interval([[-2.7, 3.9], [-1, 1.7]])
+my_b = ip.Interval([[-3, 4], [-1, 2]])
 
 plot(my_A, my_b, "Графичек", False)
 
