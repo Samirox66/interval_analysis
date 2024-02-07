@@ -26,7 +26,7 @@ def start_tol_plot(A, b, needVe=False):
     x2 = [-0.15, 0.8, -0.4, 0.133]
 
     draw_res(ax, x2)
-    # draw_res(ax, x2)
+    #draw_res(ax, x2)
 
     return
 
